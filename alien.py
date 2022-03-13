@@ -18,7 +18,7 @@ class AlienFleet:
     # alien_images = [[pg.transform.rotozoom(pg.image.load(f'images/alien__{m}{n}.png'), 0, 0.5) for n in range(2)] for m in range(3)]
     ufo_imgs = [pg.transform.rotozoom(pg.image.load(f'images/PinkAlien{n}.png'), 0, 1) for n in range(2)]
     alien_images.append(ufo_imgs)
-    alien_points = [40, 20, 10, 100]
+    alien_points = [10, 20, 40, 100]
 
     def __init__(self, game, v=Vector(1, 0)):
         self.game = game
