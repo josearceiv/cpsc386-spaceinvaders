@@ -2,6 +2,8 @@ import pygame as pg
 from vector import Vector
 from timer import Timer
 from pygame.sprite import Sprite, Group
+from sound import Sound
+
 
 class Ship(Sprite):
   exploding_images = [pg.image.load(f'images/explode{n}.png') for n in range(8)]
@@ -12,6 +14,7 @@ class Ship(Sprite):
     self.game = game
     self.screen = game.screen
     self.settings = game.settings
+    self.sound = game.sound
     self.alien_fleet = None
     self.lasers = None
     self.stats = game.stats
@@ -42,6 +45,7 @@ class Ship(Sprite):
   def hit(self):  
     self.timer = self.exploding_timer
     self.dying = True
+    self.sound.play_ship_explosion()
   def is_dying(self): return self.dying  
   def die(self):
     self.stats.ship_hit()

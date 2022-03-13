@@ -1,10 +1,12 @@
-from decimal import HAVE_CONTEXTVAR
-import imghdr
+# from decimal import HAVE_CONTEXTVAR
+# import imghdr
 import pygame as pg
 import sys
 from alien import Alien
 from vector import Vector
 from button import Button
+from sound import Sound
+
 
 GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
@@ -13,18 +15,18 @@ GREY = (130, 130, 130)
 PURPLE = (128, 0, 128)
 
 
-pg.transform.rotozoom
-
 class LandingPage:
 
-    alien_one_imgs = [pg.image.load(f'images/RedAlien{n}.png') for n in range(2)]
-    alien_two_imgs = [pg.image.load(f'images/SkyAlien{n}.png') for n in range(2)]
-    alien_three_imgs = [pg.image.load(f'images/OrangeAlien{n}.png') for n in range(2)]
-    ufo_imgs = [pg.image.load(f'images/PinkAlien{n}.png') for n in range(2)]
+    alien_one_imgs = [pg.transform.rotozoom(pg.image.load(f'images/RedAlien{n}.png'), 0, 1) for n in range(2)]
+    alien_two_imgs = [pg.transform.rotozoom(pg.image.load(f'images/SkyAlien{n}.png'), 0, 1) for n in range(2)]
+    alien_three_imgs = [pg.transform.rotozoom(pg.image.load(f'images/OrangeAlien{n}.png'), 0, 1) for n in range(2)]
+    ufo_imgs = [pg.transform.rotozoom(pg.image.load(f'images/PinkAlien{n}.png'), 0, 1) for n in range(2)]
 
     def __init__(self, game):
+        self.sound = game.sound
         self.screen = game.screen
         self.landing_page_finished = False
+        self.highscore = game.stats.get_highscore()
 
         headingFont = pg.font.SysFont(None, 192)
         subheadingFont = pg.font.SysFont(None, 122)
@@ -34,12 +36,12 @@ class LandingPage:
                 ('= 10 PTS', WHITE, font), ('= 20 PTS', WHITE, font),
                             ('= 40 PTS', WHITE, font), ('= ???', WHITE, font),
                # ('PLAY GAME', GREEN, font), 
-                ('HIGH SCORES', GREY, font)]
+                (f'HIGH SCORE = {self.highscore:,}', PURPLE, font)]
 
         self.texts = [self.get_text(msg=s[0], color=s[1], font=s[2]) for s in strings]
 
         self.posns = [150, 230]
-        alien = [60 * x + 400 for x in range(4)]
+        alien = [65 * x + 350 for x in range(4)]
         # play_high = [x for x in range(650, 760, 80)]
         # play_high = 730
         self.posns.extend(alien)
@@ -51,14 +53,14 @@ class LandingPage:
 
         n = len(self.texts)
         self.rects = [self.get_text_rect(text=self.texts[i], centerx=centerx, centery=self.posns[i]) for i in range(n)]
-        self.alien_one = Alien(game=game, image_list=LandingPage.alien_one_imgs, 
-                               v=Vector(), ul=(centerx - 140, 365))
-        self.alien_two = Alien(game=game, image_list=LandingPage.alien_two_imgs, 
-                               v=Vector(), ul=(centerx - 140, 430))
-        self.alien_three = Alien(game=game, image_list=LandingPage.alien_three_imgs, 
-                               v=Vector(), ul=(centerx - 140, 495))
-        self.ufo = Alien(game=game, image_list=LandingPage.ufo_imgs, 
-                               v=Vector(), ul=(centerx - 120, 555))
+        self.alien_one = Alien(game=game, sound=self.sound, alien_index=0, image_list=LandingPage.alien_one_imgs,
+                               v=Vector(), ul=(centerx - 140, 325))
+        self.alien_two = Alien(game=game, sound=self.sound, alien_index=1, image_list=LandingPage.alien_two_imgs,
+                               v=Vector(), ul=(centerx - 140, 390))
+        self.alien_three = Alien(game=game, sound=self.sound, alien_index=2, image_list=LandingPage.alien_three_imgs,
+                               v=Vector(), ul=(centerx - 140, 460))
+        self.ufo = Alien(game=game, sound=self.sound, alien_index=3, image_list=LandingPage.ufo_imgs,
+                               v=Vector(), ul=(centerx - 120, 520))
 
         self.hover = False
 
